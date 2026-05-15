@@ -3,6 +3,7 @@ package blog.blog_api.controller;
 
 import blog.blog_api.DTO.BlogDTO;
 import blog.blog_api.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@Tag(name = "Users", description = "Gestion des utilisateurs")
 public class UserController {
 
     private final UserService userService;

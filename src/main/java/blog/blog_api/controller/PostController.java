@@ -2,8 +2,8 @@ package blog.blog_api.controller;
 
 import blog.blog_api.DTO.BlogDTO;
 import blog.blog_api.service.PostService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/postes")
+@Tag(name = "Posts", description = "Gestion des posts")
 public class PostController {
 
     private final PostService postService;
