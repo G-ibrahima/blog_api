@@ -3,6 +3,9 @@ package blog.blog_api.DTO;
 import blog.blog_api.model.Comment;
 import blog.blog_api.model.Post;
 import blog.blog_api.model.User;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,10 +13,15 @@ import lombok.NoArgsConstructor;
 
 public class BlogDTO {
 
+
     // ─── USER ───────────────────────────────
     @Data @NoArgsConstructor @AllArgsConstructor
     public static class UserRequest {
+        @NotBlank(message = "Le username est obligatoire")
         private String username;
+
+        @Email(message = "L'email n'est pas valide")
+        @NotBlank(message = "L'email est obligatoire")
         private String email;
     }
 
@@ -27,8 +35,13 @@ public class BlogDTO {
     // ─── POST ───────────────────────────────
     @Data @NoArgsConstructor @AllArgsConstructor
     public static class PostRequest {
+        @NotBlank(message = "Le titre est obligatoire")
         private String title;
+
+        @NotBlank(message = "Le contenu est obligatoire")
         private String content;
+
+        @NotNull(message = "L'userId est obligatoire")
         private Long userId;
     }
 
@@ -43,7 +56,10 @@ public class BlogDTO {
     // ─── COMMENT ────────────────────────────
     @Data @NoArgsConstructor @AllArgsConstructor
     public static class CommentRequest {
+        @NotBlank(message = "Le contenu est obligatoire")
         private String commentContent;
+
+        @NotNull(message = "Le postId est obligatoire")
         private Long postId;
     }
 

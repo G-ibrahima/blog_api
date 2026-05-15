@@ -3,6 +3,7 @@ package blog.blog_api.controller;
 
 import blog.blog_api.DTO.BlogDTO;
 import blog.blog_api.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,12 +31,12 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public BlogDTO.UserResponse creatUser(@RequestBody BlogDTO.UserRequest  request) {
+    public BlogDTO.UserResponse creatUser(@Valid @RequestBody BlogDTO.UserRequest  request) {
         return userService.createUser(request);
     }
 
     @PutMapping("{id}")
-    public BlogDTO.UserResponse updateUser(@PathVariable Long id ,@RequestBody BlogDTO.UserRequest  request) {
+    public BlogDTO.UserResponse updateUser(@PathVariable Long id ,@Valid @RequestBody BlogDTO.UserRequest  request) {
         return userService.updateUser(id,request);
     }
 

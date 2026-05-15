@@ -2,6 +2,7 @@ package blog.blog_api.controller;
 
 import blog.blog_api.DTO.BlogDTO;
 import blog.blog_api.service.PostService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -33,13 +34,13 @@ public class PostController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public BlogDTO.PostResponse createPost(@RequestBody BlogDTO.PostRequest request){
+    public BlogDTO.PostResponse createPost(@Valid @RequestBody BlogDTO.PostRequest request){
         return postService.createPost(request);
     }
 
 
     @PutMapping("{id}")
-    public BlogDTO.PostResponse updatePost(@PathVariable Long id,@RequestBody BlogDTO.PostRequest request){
+    public BlogDTO.PostResponse updatePost(@PathVariable Long id,@Valid @RequestBody BlogDTO.PostRequest request){
         return postService.updatePost(id, request);
     }
 

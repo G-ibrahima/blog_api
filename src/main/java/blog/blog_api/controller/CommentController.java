@@ -2,6 +2,7 @@ package blog.blog_api.controller;
 
 import blog.blog_api.DTO.BlogDTO;
 import blog.blog_api.service.CommentService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class CommentController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public BlogDTO.CommentResponse createComment(@RequestBody BlogDTO.CommentRequest request){
+    public BlogDTO.CommentResponse createComment(@Valid @RequestBody BlogDTO.CommentRequest request){
         return commentService.createComment(request);
     }
 
