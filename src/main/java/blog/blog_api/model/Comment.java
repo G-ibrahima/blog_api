@@ -19,5 +19,7 @@ public class Comment {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String commentContent;
 
-    private Long postId; // on va changer ça après avec @ManyToOne
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    private Post post; // vrai relation !
 }

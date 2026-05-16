@@ -51,6 +51,7 @@ public class BlogDTO {
         private String title;
         private String content;
         private Long userId;
+        private String username;
     }
 
     // ─── COMMENT ────────────────────────────
@@ -68,30 +69,54 @@ public class BlogDTO {
         private Long commentId;
         private String commentContent;
         private Long postId;
+        private String title;
     }
 
     // ─── MAPPING STATIC ─────────────────────
     public static User toUserModel(UserRequest dto) {
-        return new User(null, dto.getUsername(), dto.getEmail());
+        return new User(
+                null,
+                dto.getUsername(),
+                dto.getEmail());
     }
 
     public static UserResponse toUserResponse(User model) {
-        return new UserResponse(model.getUserId(), model.getUsername(), model.getEmail());
+        return new UserResponse(
+                model.getUserId(),
+                model.getUsername(),
+                model.getEmail());
     }
 
     public static Post toPostModel(PostRequest dto) {
-        return new Post(null, dto.getTitle(), dto.getContent(), dto.getUserId());
+        return new Post(
+                null,
+                dto.getTitle(),
+                dto.getContent(),
+                null);
     }
 
     public static PostResponse toPostResponse(Post model) {
-        return new PostResponse(model.getPostId(), model.getTitle(), model.getContent(), model.getUserId());
+        return new PostResponse(
+                model.getPostId(),
+                model.getTitle(),
+                model.getContent(),
+                model.getUser().getUserId(),
+                model.getUser().getUsername());
     }
 
     public static Comment toCommentModel(CommentRequest dto) {
-        return new Comment(null, dto.getCommentContent(), dto.getPostId());
+        return new Comment(
+                null,
+                dto.getCommentContent(),
+                null);
+    }
+    public static CommentResponse toCommentResponse(Comment model) {
+        return new CommentResponse(
+                model.getCommentId(),
+                model.getCommentContent(),
+                model.getPost().getPostId(),
+                model.getPost().getTitle()
+        );
     }
 
-    public static CommentResponse toCommentResponse(Comment model) {
-        return new CommentResponse(model.getCommentId(), model.getCommentContent(), model.getPostId());
-    }
 }

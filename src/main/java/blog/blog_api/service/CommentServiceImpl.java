@@ -2,7 +2,9 @@ package blog.blog_api.service;
 
 import blog.blog_api.DTO.BlogDTO;
 import blog.blog_api.model.Comment;
+import blog.blog_api.model.Post;
 import blog.blog_api.repository.CommentRepository;
+import blog.blog_api.repository.PostRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,9 +15,11 @@ import java.util.stream.Collectors;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
+    private final PostRepository postRepository;
 
-    public CommentServiceImpl(CommentRepository commentRepository) {
+    public CommentServiceImpl(CommentRepository commentRepository, PostRepository postRepository) {
         this.commentRepository = commentRepository;
+        this.postRepository = postRepository;
     }
 
 
@@ -29,7 +33,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public BlogDTO.CommentResponse createComment(BlogDTO.CommentRequest request){
+            Post post = postRepository.findById(request.getPostId())
+                    .orElseThrow(() -> new RuntimeException("User non trouvé !"));
             Comment comment = BlogDTO.toCommentModel(request);
+            comment.setPost(post);
             return BlogDTO.toCommentResponse(commentRepository.save(comment));
     }
 

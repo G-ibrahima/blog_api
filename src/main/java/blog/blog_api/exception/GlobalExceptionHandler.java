@@ -3,6 +3,7 @@ package blog.blog_api.exception;
 
 import blog.blog_api.model.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -35,5 +36,17 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now(), 404, ex.getMessage(), request.getRequestURI()
         );
         return ResponseEntity.status(404).body(error);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicate(
+            DataIntegrityViolationException ex, HttpServletRequest request) {
+        ErrorResponse error = new ErrorResponse(
+                LocalDateTime.now(),
+                409,
+                "Email déjà utilisé !",
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(409).body(error);
     }
 }

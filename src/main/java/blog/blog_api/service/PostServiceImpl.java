@@ -2,6 +2,7 @@ package blog.blog_api.service;
 
 import blog.blog_api.DTO.BlogDTO;
 import blog.blog_api.model.Post;
+import blog.blog_api.model.User;
 import blog.blog_api.repository.PostRepository;
 import blog.blog_api.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -14,9 +15,12 @@ import java.util.stream.Collectors;
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository; // base de données
+    private final UserRepository userRepository;
 
-    public PostServiceImpl(PostRepository userRepository) {
-        this.postRepository = userRepository;
+
+    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository) {
+        this.postRepository = postRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -35,8 +39,16 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public BlogDTO.PostResponse createPost(BlogDTO.PostRequest postRequest) {
-        Post post = BlogDTO.toPostModel(postRequest);
+    public BlogDTO.PostResponse createPost(BlogDTO.PostRequest request) {
+        // 1. Trouve le User en BD
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new RuntimeException("User non trouvé !"));
+
+        // 2. Crée le Post avec le User
+        Post post = BlogDTO.toPostModel(request);
+        post.setUser(user); // associe le User au Post
+
+        // 3. Sauvegarde
         return BlogDTO.toPostResponse(postRepository.save(post));
     }
 
