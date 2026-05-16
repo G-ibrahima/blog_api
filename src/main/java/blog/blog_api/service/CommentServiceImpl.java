@@ -5,9 +5,9 @@ import blog.blog_api.model.Comment;
 import blog.blog_api.model.Post;
 import blog.blog_api.repository.CommentRepository;
 import blog.blog_api.repository.PostRepository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +32,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public BlogDTO.CommentResponse createComment(BlogDTO.CommentRequest request){
             Post post = postRepository.findById(request.getPostId())
                     .orElseThrow(() -> new RuntimeException("User non trouvé !"));
@@ -42,6 +43,7 @@ public class CommentServiceImpl implements CommentService {
 
 
     @Override
+    @Transactional
     public void deleteComment(Long id){
         if(!commentRepository.existsById(id)){
             throw  new RuntimeException("Commentaire non trouve !");

@@ -5,9 +5,9 @@ import blog.blog_api.model.Post;
 import blog.blog_api.model.User;
 import blog.blog_api.repository.PostRepository;
 import blog.blog_api.repository.UserRepository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +39,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public BlogDTO.PostResponse createPost(BlogDTO.PostRequest request) {
         // 1. Trouve le User en BD
         User user = userRepository.findById(request.getUserId())
@@ -53,6 +54,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public BlogDTO.PostResponse updatePost(Long id, BlogDTO.PostRequest postRequest) {
         Post post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("User non trouvé !"));
         post.setTitle(postRequest.getTitle());
@@ -61,6 +63,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public void deletePost(Long id) {
         if(!postRepository.existsById(id)){
             throw new RuntimeException("Post non trouvé !");

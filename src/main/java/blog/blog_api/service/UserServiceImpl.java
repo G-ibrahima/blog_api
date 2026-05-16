@@ -4,9 +4,9 @@ package blog.blog_api.service;
 import blog.blog_api.DTO.BlogDTO;
 import blog.blog_api.model.User;
 import blog.blog_api.repository.UserRepository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,12 +34,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public BlogDTO.UserResponse createUser(BlogDTO.UserRequest request) {
         User user = BlogDTO.toUserModel(request);
         return BlogDTO.toUserResponse(userRepository.save(user));
     }
 
     @Override
+    @Transactional
     public BlogDTO.UserResponse updateUser(Long id, BlogDTO.UserRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User non trouvé !"));
@@ -49,6 +51,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
             throw new RuntimeException("User non trouvé !");
