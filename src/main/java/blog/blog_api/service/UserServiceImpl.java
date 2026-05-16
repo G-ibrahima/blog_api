@@ -3,6 +3,7 @@ package blog.blog_api.service;
 
 import blog.blog_api.DTO.BlogDTO;
 import blog.blog_api.model.User;
+import blog.blog_api.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,47 +12,47 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private List<User> users = new ArrayList<>();
+
+    private final UserRepository userRepository; // base de données
+
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public List<BlogDTO.UserResponse> getAllUsers() {
-        return users.stream()
+        return userRepository.findAll().stream()
                 .map(BlogDTO::toUserResponse)
                 .collect(Collectors.toList());
     }
 
     @Override
     public BlogDTO.UserResponse getUserById(Long id) {
-        return users.stream()
-                .filter(u -> u.getUserId().equals(id))
-                .map(BlogDTO::toUserResponse)
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("User non trouvé !"));
+        User user = userRepository.findById(id)
+                        .orElseThrow(() -> new RuntimeException("User non trouvé !"));
+        return BlogDTO.toUserResponse(user);
     }
 
     @Override
     public BlogDTO.UserResponse createUser(BlogDTO.UserRequest request) {
         User user = BlogDTO.toUserModel(request);
-        user.setUserId((long) users.size() + 1);
-        users.add(user);
-        return BlogDTO.toUserResponse(user);
+        return BlogDTO.toUserResponse(userRepository.save(user));
     }
 
     @Override
     public BlogDTO.UserResponse updateUser(Long id, BlogDTO.UserRequest request) {
-        for (User u : users) {
-            if (u.getUserId().equals(id)) {
-                u.setUsername(request.getUsername());
-                u.setEmail(request.getEmail());
-                return BlogDTO.toUserResponse(u);
-            }
-        }
-        throw new RuntimeException("User non trouvé !");
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User non trouvé !"));
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+        return BlogDTO.toUserResponse(userRepository.save(user));
     }
 
     @Override
     public void deleteUser(Long id) {
-        boolean removed = users.removeIf(u -> u.getUserId().equals(id));
-        if (!removed) throw new RuntimeException("User non trouvé !");
+        if (!userRepository.existsById(id)) {
+            throw new RuntimeException("User non trouvé !");
+        }
+        userRepository.deleteById(id);
     }
 }
