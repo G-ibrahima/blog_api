@@ -6,6 +6,9 @@ import blog.blog_api.model.User;
 import blog.blog_api.repository.PostRepository;
 import blog.blog_api.repository.UserRepository;
 import blog.blog_api.specification.PostSpecification;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class PostServiceImpl implements PostService {
 
@@ -25,8 +29,10 @@ public class PostServiceImpl implements PostService {
         this.userRepository = userRepository;
     }
 
+    @Cacheable("posts")
     @Override
     public List<BlogDTO.PostResponse> getAllPosts(Long userId,String title, String content) {
+        log.info("Requête BD exécutée !");
         Specification<Post> spec = Specification
                 .where(PostSpecification.hasUserId(userId))
                 .and(PostSpecification.hasTitle(title))
@@ -47,6 +53,7 @@ public class PostServiceImpl implements PostService {
         return BlogDTO.toPostResponse(post);
     }
 
+    @CacheEvict(value = "posts", allEntries = true)
     @Override
     @Transactional
     public BlogDTO.PostResponse createPost(BlogDTO.PostRequest request) {
@@ -71,6 +78,7 @@ public class PostServiceImpl implements PostService {
         return BlogDTO.toPostResponse(postRepository.save(post));
     }
 
+    @CacheEvict(value = "posts", allEntries = true)
     @Override
     @Transactional
     public void deletePost(Long id) {

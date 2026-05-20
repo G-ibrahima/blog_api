@@ -11,7 +11,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/postes")
+@RequestMapping("/posts")
 @Tag(name = "Posts", description = "Gestion des posts")
 public class PostController {
 
