@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 
 public class BlogDTO {
 
@@ -52,6 +54,8 @@ public class BlogDTO {
         private String content;
         private Long userId;
         private String username;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
     }
 
     // ─── COMMENT ────────────────────────────
@@ -92,7 +96,7 @@ public class BlogDTO {
                 null,
                 dto.getTitle(),
                 dto.getContent(),
-                null);
+                null,null,null,null);
     }
 
     public static PostResponse toPostResponse(Post model) {
@@ -101,7 +105,9 @@ public class BlogDTO {
                 model.getTitle(),
                 model.getContent(),
                 model.getUser().getUserId(),
-                model.getUser().getUsername());
+                model.getUser().getUsername(),
+                model.getCreatedAt(),
+                model.getUpdatedAt());
     }
 
     public static Comment toCommentModel(CommentRequest dto) {

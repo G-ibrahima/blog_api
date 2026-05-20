@@ -1,0 +1,4 @@
+ALTER TABLE posts
+ADD COLUMN created_at DATETIME,
+ADD COLUMN updated_at DATETIME,
+ADD COLUMN deleted_at DATETIME;
