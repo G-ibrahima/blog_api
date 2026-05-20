@@ -22,8 +22,11 @@ public class PostController {
     }
 
     @GetMapping
-    public List<BlogDTO.PostResponse> getAllPosts(){
-        return postService.getAllPosts();
+    public List<BlogDTO.PostResponse> getAllPosts(
+            @RequestParam(required = false) Long userId,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String content){
+        return postService.getAllPosts(userId,title,content);
     }
 
 

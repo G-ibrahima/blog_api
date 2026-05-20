@@ -5,6 +5,8 @@ import blog.blog_api.model.Post;
 import blog.blog_api.model.User;
 import blog.blog_api.repository.PostRepository;
 import blog.blog_api.repository.UserRepository;
+import blog.blog_api.specification.PostSpecification;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -24,9 +26,16 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<BlogDTO.PostResponse> getAllPosts() {
-        return postRepository.findAll().stream().
-                map(BlogDTO::toPostResponse)
+    public List<BlogDTO.PostResponse> getAllPosts(Long userId,String title, String content) {
+        Specification<Post> spec = Specification
+                .where(PostSpecification.hasUserId(userId))
+                .and(PostSpecification.hasTitle(title))
+                .and(PostSpecification.hasContent(content));
+
+
+        return postRepository.findAll(spec)
+                .stream()
+                .map(BlogDTO::toPostResponse)
                 .collect(Collectors.toList());
     }
 
