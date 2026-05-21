@@ -4,6 +4,7 @@ import blog.blog_api.DTO.BlogDTO;
 import blog.blog_api.config.JwtService;
 import blog.blog_api.model.User;
 import blog.blog_api.repository.UserRepository;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,15 +20,18 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final UserDetailsService userDetailsService;
+
 
     public AuthController(UserRepository userRepository,
                           PasswordEncoder passwordEncoder,
                           AuthenticationManager authenticationManager,
-                          JwtService jwtService) {
+                          JwtService jwtService,UserDetailsService userDetailsService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
     }
 
     @PostMapping("/register")
@@ -41,7 +45,7 @@ public class AuthController {
                 "ROLE_USER"
         );
         userRepository.save(user);
-        String token = jwtService.generateToken(user.getEmail());
+        String token = jwtService.generateToken(user.getEmail(), user.getRole());
         return Map.of("token", token);
     }
 
@@ -53,7 +57,9 @@ public class AuthController {
                         request.getPassword()
                 )
         );
-        String token = jwtService.generateToken(request.getEmail());
+        //charge le user depuis la BD pour avoir son rôle
+        User user = (User) userDetailsService.loadUserByUsername(request.getEmail());
+        String token = jwtService.generateToken(user.getEmail(), user.getRole());
         return Map.of("token", token);
     }
 }

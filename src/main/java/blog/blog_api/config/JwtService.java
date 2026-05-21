@@ -20,9 +20,10 @@ public class JwtService {
     private Long expiration;
 
     // Génère un token JWT
-    public String generateToken(String username) {
+    public String generateToken(String email, String role) { // 👈 ajoute role
         return Jwts.builder()
-                .subject(username)
+                .subject(email)
+                .claim("role", role) // 👈 ajoute le rôle
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSignKey())
