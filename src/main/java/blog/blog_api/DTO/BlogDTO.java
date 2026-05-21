@@ -2,6 +2,7 @@ package blog.blog_api.DTO;
 
 import blog.blog_api.model.Comment;
 import blog.blog_api.model.Post;
+import blog.blog_api.model.Tag;
 import blog.blog_api.model.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -11,6 +12,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class BlogDTO {
@@ -56,6 +60,7 @@ public class BlogDTO {
         private String username;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
+        private List<TagResponse> tags;
     }
 
     // ─── COMMENT ────────────────────────────
@@ -75,6 +80,21 @@ public class BlogDTO {
         private Long postId;
         private String title;
     }
+
+    // ─── TAG ────────────────────────────────
+    @Data @NoArgsConstructor @AllArgsConstructor
+    public static class TagRequest {
+        @NotBlank(message = "Le nom du tag est obligatoire")
+        private String name;
+    }
+
+    @Data @NoArgsConstructor @AllArgsConstructor
+    public static class TagResponse {
+        private Long tagId;
+        private String name;
+    }
+
+
 
     // ─── MAPPING STATIC ─────────────────────
     public static User toUserModel(UserRequest dto) {
@@ -96,7 +116,8 @@ public class BlogDTO {
                 null,
                 dto.getTitle(),
                 dto.getContent(),
-                null,null,null,null);
+                null,null,null,null,
+                new ArrayList<>());
     }
 
     public static PostResponse toPostResponse(Post model) {
@@ -107,7 +128,8 @@ public class BlogDTO {
                 model.getUser().getUserId(),
                 model.getUser().getUsername(),
                 model.getCreatedAt(),
-                model.getUpdatedAt());
+                model.getUpdatedAt(),
+                model.getTags().stream().map(BlogDTO::toTagResponse).collect(Collectors.toList()));
     }
 
     public static Comment toCommentModel(CommentRequest dto) {
@@ -123,6 +145,15 @@ public class BlogDTO {
                 model.getPost().getPostId(),
                 model.getPost().getTitle()
         );
+    }
+
+    // Mapping static
+    public static Tag toTagModel(TagRequest dto) {
+        return new Tag(null, dto.getName());
+    }
+
+    public static TagResponse toTagResponse(Tag model) {
+        return new TagResponse(model.getTagId(), model.getName());
     }
 
 }

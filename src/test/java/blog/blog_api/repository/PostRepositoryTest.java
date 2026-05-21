@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @DataJpaTest
@@ -35,7 +37,13 @@ public class PostRepositoryTest {
     @Test
     void save_devraitSauvegarderUnPost() {
         // Arrange
-        Post post = new Post(null, "Mon titre", "Mon contenu", user, null, null, null);
+        Post post = new Post(
+                null,
+                "Mon titre",
+                "Mon contenu",
+                user,
+                null, null, null,
+                new ArrayList<>());
 
         // Act
         Post saved = postRepository.save(post);
@@ -48,7 +56,12 @@ public class PostRepositoryTest {
     @Test
     void findById_devraitRetournerLePost() {
         // Arrange
-        Post post = new Post(null, "Mon titre", "Mon contenu", user, null, null, null);
+        Post post = new Post(
+                null,
+                "Mon titre",
+                "Mon contenu", user,
+                null, null, null,
+                new ArrayList<>());
         entityManager.persist(post);
         entityManager.flush();
 
@@ -63,7 +76,12 @@ public class PostRepositoryTest {
     @Test
     void delete_devraitSoftDeleterLePost() {
         // Arrange
-        Post post = new Post(null, "Mon titre", "Mon contenu", user, null, null, null);
+        Post post = new Post(
+                null,
+                "Mon titre",
+                "Mon contenu",
+                user, null, null, null,
+                new ArrayList<>());
         entityManager.persist(post);
         entityManager.flush();
 
