@@ -29,7 +29,7 @@ public class PostRepositoryTest {
     @BeforeEach
     void setUp() {
         // Crée un User avant chaque test
-        user = new User(null, "ibrahima", "ibrahima@gmail.com");
+        user = new User(null, "ibrahima", "ibrahima@gmail.com","password", "ROLE_USER");
         entityManager.persist(user);
         entityManager.flush();
     }

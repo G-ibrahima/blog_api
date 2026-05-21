@@ -29,6 +29,9 @@ public class BlogDTO {
         @Email(message = "L'email n'est pas valide")
         @NotBlank(message = "L'email est obligatoire")
         private String email;
+
+        @NotBlank(message = "Le mot de passe est obligatoire")
+        private String password;
     }
 
     @Data @NoArgsConstructor @AllArgsConstructor
@@ -94,6 +97,13 @@ public class BlogDTO {
         private String name;
     }
 
+    // ─── Log ────────────────────────────────
+    @Data @NoArgsConstructor @AllArgsConstructor
+    public static class LoginRequest {
+        private String email;
+        private String password;
+    }
+
 
 
     // ─── MAPPING STATIC ─────────────────────
@@ -101,7 +111,9 @@ public class BlogDTO {
         return new User(
                 null,
                 dto.getUsername(),
-                dto.getEmail());
+                dto.getEmail(),
+                dto.getPassword(),
+                "ROLE_USER" );
     }
 
     public static UserResponse toUserResponse(User model) {
